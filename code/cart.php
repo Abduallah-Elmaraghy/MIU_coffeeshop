@@ -1,284 +1,172 @@
-
 <?php
 session_start();
-include "menu.php";
-  $totalPrice = 0;
-  $totalWithTax = 0;
-  $errormsg = "";
-//$_SESSION['cartItems']= array();
-  //echo count($_SESSION['cartItems']);
- 
-  $Ids = array();
-  $quantities = array();
-if(isset($_SESSION['cartItems'])){
-  foreach($_SESSION['cartItems'] as $cartItem){
-  		try {
-		    array_push(  $Ids,(int)$cartItem['Id']);//echo $cartItem['Id'] . "  hehe " .$cartItem['quantity'];
-    		array_push($quantities,(int)$cartItem['quantity']);
-		} 
-		catch (Exception $e) 
-		{
-		   // echo 'Caught exception: ',  $e->getMessage(), "\n";
-		}
-  	//echo $cartItem['Id'] . "  hehe " .$cartItem['quantity'];
-      
-  }
+$status="";
+if (isset($_POST['action']) && $_POST['action']=="remove"){
+if(!empty($_SESSION["shopping_cart"])) {
+    foreach($_SESSION["shopping_cart"] as $key => $value) {
+      if($_POST["Code"] == $key){
+      unset($_SESSION["shopping_cart"][$key]);
+      $status = "<div class='box' style='color:red;'>
+      Product is removed from your cart!</div>";
+      }
+      if(empty($_SESSION["shopping_cart"]))
+      unset($_SESSION["shopping_cart"]);
+      }		
+}
 }
 
-
-  //  echo "heeeeeeeeeeeee". $_SESSION['cartItems']['Id'][0];
-
-   
-      $servername = "localhost";
-      $username = "root";
-      $password = "";
-      $dbname = "miu_coffeeshop";
-
-      
-      // Create connection
-      $conn = new mysqli($servername, $username, $password, $dbname);
-      // Check connection
-      if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-      }
-
-      //select the closest query that would match
-      $sql="select * from products where Id IN (".implode(",",$Ids).")";
-    
-      $result = $conn->query($sql);
-      if($result)
-      {
-        $allRecords = $result->fetch_all(MYSQLI_ASSOC);
-      }
-      else
-      {
-        echo "<h1> your cart is empty :( </h1>";
-        echo "<img src = '' >";
-        exit;
-      }
-      
-      
-      $qCounter = 0;
-      foreach($allRecords as $record)
-      {
-           $totalPrice += $record['Price']*$quantities[$qCounter];
-
-
-        //tax rate is 0.101
-        $totalWithTax += $record['Price']*$quantities[$qCounter] * (1 + 0.101);
-        $qCounter++;
-      }
-      $qCounter =0;
-
-  if($_SERVER['REQUEST_METHOD'] == 'POST')
-        {
-
-              if(isset($_POST['checkout']))
-              {
-                  if(!empty($_POST['address']))
-                  {
-                        $idStr = implode( ",", $Ids);
-                    $quantityStr = implode("," , $quantities);
-                    //echo "testingg ". $quantityStr;
-                    //customer id will be a session
-                    //echo $_POST['checkout'];
-                    
-                    
-                    $userId = $_SESSION['user']['Id'];
-                    $address = $_POST['address'];
-
-                    $sqlInsert = "INSERT INTO 
-                    `invoice` (`productIds`, `customerId`, `ProductQuantities`,`TotalPrice`,`Address`) 
-                    VALUES ('$idStr', '$userId', '$quantityStr','$totalWithTax','$address')";
-                    if($conn->query($sqlInsert))
-                    {
-                        unset($_SESSION['cartItems']);
-                       unset($_SESSION['inSession']);
-                       //                 echo $totalWithTax;
-
-                        echo "<script>
-                            alert('order placed successfully address confirmed view your orders tab');
-                              window.location.href='home.php';
-                            </script>";
-
-                    }
-                    else
-                    {
-                      echo "error inserting " . $conn->error;
-                    }
-                }
-                else
-                {
-                  $errormsg = "please enter a valid address so we can reach you ";
-                }
-                
-
-              }
-             
-              
-              
-          }
-       
- ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>in webmarketplace</title>
-
-
-
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-  <link rel="stylesheet" href="CSS/cart.css" type="text/css">      
-
-    <script src = "JS/cart.js"></script>
-    <script>
-    	function removeFromCart(Id)
-  		{
-  			btnId = Id;
-  			//alert(btnId);
-  			 jQuery.ajax({
-  			 	//
-              url:"./ajaxphp/DeleteFromCartSession.php",
-              data:'removeItem='+$("#"+Id).val(),
-              type:"POST",
-
-              success:function(data)
-              {
-              //	alert(data);
-              	//alert($(btnId).val());
-              	//$( "#" + Id).remove();
-               	
-               
-              }
-            });
-          
-
-  			//location.reload();
-  		}
-
-
-
-    </script>
-   
-</head>
-<body>
-<section>
-  
-
-<?php 
-
-
+if (isset($_POST['action']) && $_POST['action']=="change"){
+  foreach($_SESSION["shopping_cart"] as &$value){
+    if($value['Code'] === $_POST["Code"]){
+        $value['quantity'] = $_POST["quantity"];
+        break; // Stop the loop after we've found the product
+    }
+}
+  	
+}
 ?>
 
- <!--Grid row-->
-  <div class="row">
+<style>
+	.product_wrapper {
+	float:left;
+	padding: 10px;
+	text-align: center;
+	}
+	.product_wrapper:hover {
+	box-shadow: 0 0 0 2px #e5e5e5;
+	cursor:pointer;
+	}
+	.product_wrapper .name {
+	font-weight:bold;
+	}
+	.product_wrapper .buy {
+	text-transform: uppercase;
+	background: #F68B1E;
+	border: 1px solid #F68B1E;
+	cursor: pointer;
+	color: #fff;
+	padding: 8px 40px;
+	margin-top: 10px;
+	}
+	.product_wrapper .buy:hover {
+	background: #f17e0a;
+	border-color: #f17e0a;
+	}
+	.message_box .box{
+	margin: 10px 0px;
+	border: 1px solid #2b772e;
+	text-align: center;
+	font-weight: bold;
+	color: #2b772e;
+	}
+	.table td {
+	border-bottom: #F0F0F0 1px solid;
+	padding: 10px;
+	}
+	.cart_div {
+	float:right;
+	font-weight:bold;
+	position:relative;
+	}
+	.cart_div a {
+	color:#000;
+	}	
+	.cart_div span {
+	font-size: 12px;
+	line-height: 14px;
+	background: #F68B1E;
+	padding: 2px;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	position: absolute;
+	top: -1px;
+	left: 13px;
+	color: #fff;
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	}
+	.cart .remove {
+	background: none;
+	border: none;
+	color: #0067ab;
+	cursor: pointer;
+	padding: 0px;
+	}
+	.cart .remove:hover {
+	text-decoration:underline;
+	}
+</style>
 
-    <!--Grid column-->
-    <div class="col-lg-6">
+<div class="cart">
+<?php
+if(isset($_SESSION["shopping_cart"])){
+    $total_price = 0;
+?>	
+<table class="table">
+<tbody>
+<tr>
+<td></td>
+<td>ITEM NAME</td>
+<td>QUANTITY</td>
+<td>UNIT PRICE</td>
+<td>ITEMS TOTAL</td>
+</tr>	
+<?php		
+foreach ($_SESSION["shopping_cart"] as $product){
+?>
+<tr>
+<td>
+<img src='<?php echo $product["Image"]; ?>' width="50" height="40" />
+</td>
+<td><?php echo $product["Name"]; ?><br />
+<form method='post' action=''>
+<input type='hidden' name='Code' value="<?php echo $product["Code"]; ?>" />
+<input type='hidden' name='action' value="remove" />
+<button type='submit' class='remove'>Remove Item</button>
+</form>
+</td>
+<td>
+<form method='post' action=''>
+<input type='hidden' name='Code' value="<?php echo $product["Code"]; ?>" />
+<input type='hidden' name='action' value="change" />
+<select name='quantity' class='quantity' onChange="this.form.submit()">
+<option <?php if($product["quantity"]==1) echo "selected";?>
+value="1">1</option>
+<option <?php if($product["quantity"]==2) echo "selected";?>
+value="2">2</option>
+<option <?php if($product["quantity"]==3) echo "selected";?>
+value="3">3</option>
+<option <?php if($product["quantity"]==4) echo "selected";?>
+value="4">4</option>
+<option <?php if($product["quantity"]==5) echo "selected";?>
+value="5">5</option>
+</select>
+</form>
+</td>
+<td><?php echo "$".$product["StandardPrice"]; ?></td>
+<td><?php echo "$".$product["StandardPrice"]*$product["quantity"]; ?></td>
+</tr>
+<?php
+$total_price += ($product["StandardPrice"]*$product["quantity"]);
+}
+?>
+<tr>
+<td colspan="5" align="right">
+<strong>TOTAL: <?php echo "$".$total_price; ?></strong>
+</td>
+</tr>
+</tbody>
+</table>		
+  <?php
+}else{
+	echo "<h3>Your cart is empty!</h3>";
+	}
+?>
+</div>
 
-<!-- panel on the left -->
-      <!-- start of the item -->
-      
-      <?php foreach($allRecords as $record){ 
-        //change to new image file paths 
-        $noImage = "./pics/no-image.png";
-          $path = "./pics/".$record['Id'];
-        $files = glob($path."*.{jpg,jpeg,png,gif}", GLOB_BRACE);
+<div style="clear:both;"></div>
 
-       // echo implode(',', $files);
-          $validatedPath = empty($files)? $noImage : $files[0];
-        ?>
-  <div id = <?php echo $record['Id'] ?> class="card flex-row flex-wrap">
-        <div class="card-header border-0">
-
-            <img src = <?php echo "'".$validatedPath."'" ;?> alt = "" >
-        </div>
-        <div class="card-block px-2">
-            <h4 class="card-title"><?php echo $record['Name']?></h4>
-            <p class="card-text"><?php echo $record['Details']?></p>
-            <br>
-            <p class="card-text">Price : <?php echo $record['Price']?></p>
-            <br>
-            <p class = "card -text">quantity: <?php echo $quantities[$qCounter]; ?></p>
-            <form action = "" method = "POST">
-            	<button class = "btn btn-danger" onclick='removeFromCart(this.id)' 
-            		id = <?php echo 'removeItem'.$record['Id'];?>name = <?php echo 'removeItem'.$record['Id'];?> value = <?php echo $record['Id'] ?>><i class="fa fa-trash"></i></button>
-
-
-            	
-        	</form>
-        </div>
-        <div class="w-100"></div>
-        
-  </div>
-
-<?php 
-//your still in the loop :)
- 
-//ending for each loop
-} ?>
-
-
-  </div>
-    <!--Grid column-->
-
-  
-    <div class = "col-lg-5">
-<!-- reciept on the right -->
-     <!-- Card -->
-      <div class="mb-3">
-        <div class="pt-4">
-
-          <h5 class="mb-3">The total amount of</h5>
-
-
-
-          <ul class="list-group list-group-flush">
-            <?php foreach($allRecords as $record){?>
-            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-              <?php echo $record['Name'] ?>
-              <span><?php echo $record['Price'].'EGP' ?></span>
-            </li>
-            <!--closing for each loop -->
-            <?php }?>
-            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-              </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-              Temporary amount
-              <span><?php echo $totalPrice.'EGP' ?></span>
-            </li>
-            
-            <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-              <div>
-                <strong>The total amount with</strong>
-                <strong>
-                  <p class="mb-0">(taxes)</p>
-                </strong>
-              </div>
-              <span><strong><?php echo $totalWithTax.'EGP' ?></strong></span>
-            </li>
-          </ul>
-            <form action = "" method = "POST">
-                 <textarea id="address" name="address" style="height:50px" placeholder="enter your address here"></textarea>
-                 <input type="submit" name = "checkout" class="btn btn-primary btn-block" value = "checkout">
-                 <p class = 'text-danger'><?php echo $errormsg; ?></p>
-            </form>
-        </div>
-      </div>
-      <!-- Card -->
-
-      
-    </div>
-        
-
-</section>
-<?php 
-        
-        include 'footer.php'
-    ?>
-</body>
-</html>
+<div class="message_box" style="margin:10px 0px;">
+<?php echo $status; ?>
+</div>
