@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2021 at 01:46 AM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.4.11
+-- Generation Time: Jun 03, 2021 at 09:50 PM
+-- Server version: 10.4.17-MariaDB
+-- PHP Version: 8.0.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -48,8 +48,18 @@ INSERT INTO `aboutus` (`aboutus`, `id`) VALUES
 
 CREATE TABLE `beverages` (
   `DrinkId` int(11) NOT NULL,
-  `DrinkType` int(11) NOT NULL
+  `DrinkType` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `beverages`
+--
+
+INSERT INTO `beverages` (`DrinkId`, `DrinkType`) VALUES
+(1, 'mkana almaniii'),
+(2, 'mkana fransawee'),
+(3, 'mkana almaniii'),
+(4, 'mkana fransawee');
 
 -- --------------------------------------------------------
 
@@ -63,6 +73,14 @@ CREATE TABLE `flavors` (
   `Price` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `flavors`
+--
+
+INSERT INTO `flavors` (`Id`, `FlavorName`, `Price`) VALUES
+(1, 'mangaa', 5),
+(2, 'lotus', 8);
+
 -- --------------------------------------------------------
 
 --
@@ -71,9 +89,18 @@ CREATE TABLE `flavors` (
 
 CREATE TABLE `milk_type` (
   `Id` int(11) NOT NULL,
-  `Type` int(11) NOT NULL,
+  `Type` varchar(250) NOT NULL,
   `Price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `milk_type`
+--
+
+INSERT INTO `milk_type` (`Id`, `Type`, `Price`) VALUES
+(1, 'mikawiii', 20),
+(2, 'b5ero', 5),
+(3, 'mara3ee', 7);
 
 -- --------------------------------------------------------
 
@@ -116,8 +143,16 @@ CREATE TABLE `product` (
   `MilkTypeId` int(11) NOT NULL,
   `SizeId` int(11) NOT NULL,
   `Description` varchar(512) NOT NULL,
-  `DrinkTypeId` int(11) NOT NULL
+  `DrinkTypeId` int(11) NOT NULL,
+  `image` varchar(250) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`Id`, `Name`, `StandardPrice`, `MilkTypeId`, `SizeId`, `Description`, `DrinkTypeId`, `image`) VALUES
+(1, 'sherif', 20, 0, 0, 'gamed fsh5', 0, 'images.jpeg');
 
 -- --------------------------------------------------------
 
@@ -128,8 +163,18 @@ CREATE TABLE `product` (
 CREATE TABLE `size` (
   `Id` int(11) NOT NULL,
   `SizeName` varchar(512) NOT NULL,
-  `Price` float NOT NULL
+  `Price` float NOT NULL,
+  `picture` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `size`
+--
+
+INSERT INTO `size` (`Id`, `SizeName`, `Price`, `picture`) VALUES
+(1, 'small', 20, 'images.jpg'),
+(2, 'Medium', 30, 'img.jpg'),
+(3, 'large', 40, 'images.jpg');
 
 --
 -- Indexes for dumped tables
@@ -185,19 +230,19 @@ ALTER TABLE `size`
 -- AUTO_INCREMENT for table `beverages`
 --
 ALTER TABLE `beverages`
-  MODIFY `DrinkId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `DrinkId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `flavors`
 --
 ALTER TABLE `flavors`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `milk_type`
 --
 ALTER TABLE `milk_type`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -215,13 +260,13 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `size`
 --
 ALTER TABLE `size`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
