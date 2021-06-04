@@ -1,3 +1,11 @@
+<?php
+
+$conn = mysqli_connect("localhost","root","","miu_coffeeshop");
+if (!$conn) {
+	die("Connection failed: " . mysqli_connect_error());
+}
+
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -8,7 +16,22 @@
 		<link rel="stylesheet" href="css/productview.css">
 	</head>
 	<body>
-		<div class="container">
+		<?php
+        $query1="SELECT * FROM `product` ";
+$result = $conn->query($query1);
+if ($result->num_rows > 0) {
+  while($row = $result->fetch_assoc()) {
+ 
+      
+      $Name=$row["Name"];
+    $StandardPrice=$row["StandardPrice"];
+    $Description=$row["Description"];
+        $image=$row["image"];
+    
+
+        
+        ?>
+        <div class="container">
 			<div id="demo" class="carousel slide" data-ride="carousel">
 				<div class="carousel-inner">
 					<div class="carousel-item active">
@@ -16,17 +39,25 @@
 							<div class="row">
 								<div class="col-md-6 text-center align-self-center"> 
 									<!--el image tet7at hena mkan el src elly ta7t-->
-									<img class="img-fluid" src="images/1.jpg"> 
-								</div>
+								<?php
+                                 
+      print "<img src = 'images/$image' class = 'img-fluid;'>"
+
+      
+                
+                                    ?>
+                                </div>
 								<div class="col-md-6 info">
 									<div class="row title">
 										<!--										esm el product hena-->
 										<div class="col">
-											<h2>Herbalism</h2>
+										    <?php
+                                            echo "<h2>$Name <h2>";
+                                             ?>
 										</div>
 									</div>
 									<!--									ektb el details hena-->
-									<p>Natural herbal wash</p> 
+									<?php  echo "<p>$Description <p>";  ?>
 									<!--E3ml mn dy kaza wa7da l el customizations dy el radio buttons-->
 									<!--dy 70t feha el price m3 el large aw medium 3ala 7asab el size-->
 									<div class="row price">
@@ -69,5 +100,14 @@
 				</div>
 			</div>
 		</div>
-	</body>
+<?php
+         }
+   }
+        else {
+  echo "0 results";
+} 
+      ?>
+  
+            </body>
+            
 </html>
