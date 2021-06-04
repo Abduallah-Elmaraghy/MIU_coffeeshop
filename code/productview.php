@@ -45,110 +45,120 @@ if (!$conn)
 											<!--										esm el product hena-->
 											<div class="col">
 												<?php
-					echo "<h2>$Name <h2>";
+					echo "<h1>$Name </h1>";
 												?>
 											</div>
 										</div>
-										<?php  echo "<p>$Description <p>";  ?>
-										<?php echo "<h3>choose your size <h3>";
-				$query1="SELECT `id` ,`SizeName` FROM `size` ";
+										<?php  
+				echo "<h3>$Description </h3>"; 
+				echo "<h1>Pick a cup size</h1>";
+				$query1="SELECT * FROM `size` ";
 				$result = $conn->query($query1);
 				if ($result->num_rows > 0)
 				{
+										?>
+										<div class="row price">	
+											<?php
 					// output data of each row
 					while($row = $result->fetch_assoc())
 					{
-						$id=$row["id"];
+						$id=$row["Id"];
 						$name=$row["SizeName"];
-										?>
-										<div class="size">
-											<label class="radio1">
+						$sizeprice=$row["Price"];
+											?>
+											<label class="radio">
+												<input type="radio" name="size1" value="large"> 
 												<span>
-													<a><div class="row">
-														<big>
-															<b>
-																<?php
-						echo   "<label for='A' ><input type='radio' class=test value='$id' name='staff1'> $name<br />";
+													<a <?php echo "id=".$id; ?>>
+														<div class="row">
+															<?php echo $name; ?>
+														</div>
+														<div class="row">
+															<?php echo $sizeprice+$StandardPrice?>
+														</div>
+													</a>
+												</span>
+											</label>
+											<?php
 					}
+											?>
+										</div>
+										<?php
 				} 
 				else
 				{
-					echo "0 results";
+					echo " ";
 				}
-																?>     
-															</b>
-														</big>
-														</div>
-													</a>
-												</span> 
-											</label>
-										</div>
+										?>     
 										<?php
-				echo "<h3>choose your milk <h3>";
+				echo "<h3>Pick a milk <h3>";
 				$query2="SELECT `id` ,`Type` FROM `milk_type` ";
 				$result2 = $conn->query($query2);
-				if ($result2->num_rows > 0) {
+				if ($result2->num_rows > 0) 
+				{
 					// output data of each row
+										?>
+										<div class="row price">	
+											<?php
 					while($row2 = $result2->fetch_assoc()) 
 					{
 						$id2=$row2["id"];
 						$Typename=$row2["Type"];
-										?>
-										<div class="milk">
+											?>
 											<label class="radio">
+												<input type="radio" name="size1" value="large"> 
 												<span>
-													<a><div class="row">
-														<big><b>
-															<?php
-						echo "<label for='B' ><input type='radio' value='$id2' name='staff2'> $Typename<br />";
+													<a <?php echo "id=".$id2; ?>>
+														<div class="row">
+															<?php echo $Typename; ?>
+														</div>
+													</a>
+												</span>
+											</label>
+											<?php
 					}
+											?>
+										</div>
+										<?php
 				}
 				else
 				{
 					echo "";
 				}
-															?>     
-															</b></big>
-														</div>
-													</a>
-												</span> 
-											</label>
-										</div>
+										?>     
+
+
 										<?php
-				echo "<h3>choose your flavors <h3>";
+				echo "<h3>Pick a flavors <h3>";
 				$query3="SELECT `Id`, `FlavorName` FROM `flavors` ";
 				$result3 = $conn->query($query3);
 				if ($result3->num_rows > 0) 
 				{
 					// output data of each row
-										?>
-										<div class="row price">
-											<label class="radio">
-												<?php 
 					while($row3 = $result3->fetch_assoc()) 
 					{
+										?>
+										<div class="row price">
+
+											<?php 
 						$id3=$row3["Id"];
 						$FlavorName=$row3["FlavorName"];
-												?>
-												<input type="radio" name="" value="large"> 
+											?>
+											<label class="radio">
+												<input type="radio" name="size1" value="large"> 
 												<span>
-													<a id='.<?php echo $id3;?>.'>
+													<a <?php echo "id=".$id3; ?>>
 														<div class="row">
-															<big>
-																<b>
-																	<?php
-						echo $FlavorName;
-																	?>
-																</b>
-															</big>
+															<?php echo $FlavorName; ?>
 														</div>
 													</a>
 												</span>
-
-												<?php 
-					}
-												?>	
 											</label>
+
+											<?php 
+					}
+											?>	
+											>
 										</div>
 										<?php
 				}
@@ -157,36 +167,6 @@ if (!$conn)
 					echo " ";
 				}
 										?> 
-										<div class="row price">
-											<label class="radio">
-												<input type="radio" name="size1" value="small" checked>
-												<span>
-													<a>
-														<div class="row">
-															<big>
-																<b>1.5 oz.</b>
-															</big>
-														</div>
-														<div class="row">
-															$12.95
-														</div>
-													</a>
-												</span> 
-											</label>
-											<label class="radio">
-												<input type="radio" name="size1" value="large"> 
-												<span>
-													<a>
-														<div class="row">
-															<big><b>4.4 oz.</b></big>
-														</div>
-														<div class="row">
-															$21.95
-														</div>
-													</a>
-												</span>
-											</label>
-										</div>
 									</div>
 								</div>
 								<div class="row lower">
@@ -210,20 +190,22 @@ if (!$conn)
 		} 
 			?>
 		</form>
+
 		<?php
-		if(isset($_POST['submit']))
-		{
-			$product_name=$_POST['product_name'];
-			$amount=$_POST['quantity'];  
-			$description=$_POST['description'];
-			$category_ID=$_POST['categories'];
-			$price=$_POST['price'];
-			$product_Image=$_FILES['product-image']['name'];
-			$tmp=$_FILES['product-image']['tmp_name'];
-			move_uploaded_file($tmp,"products/".$product_Image);	
-			$sql="INSERT INTO `products`(`product_name`, `picture_path`, `price`, `amount`, `discription`, `category_id`) VALUES ('$product_name','$tmp','$price','$amount','$description','$category_ID')";
-			mysqli_query($conn, $sql);
-		}
+		//		if(isset($_POST['submit']))
+		//		{
+		//			$product_name=$_POST['product_name'];
+		//			$amount=$_POST['quantity'];  
+		//			$description=$_POST['description'];
+		//			$category_ID=$_POST['categories'];
+		//			$price=$_POST['price'];
+		//			$product_Image=$_FILES['product-image']['name'];
+		//			$tmp=$_FILES['product-image']['tmp_name'];
+		//			move_uploaded_file($tmp,"products/".$product_Image);	
+		//			$sql="INSERT INTO `products`(`product_name`, `picture_path`, `price`, `amount`, `discription`, `category_id`) VALUES ('$product_name','$tmp','$price','$amount','$description','$category_ID')";
+		//			mysqli_query($conn, $sql);
+		//		}
 		?>
+
 	</body>
 </html>

@@ -14,11 +14,19 @@ body
 	max-width: 1000px;
 	width: 100%;
 	padding: 4rem;
-	background-color: #FA2803;
+	background-color: rgb(54, 54, 54);
 	color: white;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+@media(max-width:768px) 
+{
+	.card 
+	{
+		width: 100%;
+		padding: 1.5rem;
+	}
+}
 
 .row 
 {
@@ -67,9 +75,24 @@ img
 	padding: 1rem;
 }
 
+@media(max-width:768px) 
+{
+	img 
+	{
+		padding: 2.5rem 0;
+	}
+}
+
 .title .col 
 {
 	padding: 0;
+}
+
+.fa-heart-o 
+{
+	font-size: 2rem;
+	color: #ffffffaf;
+	font-weight: lighter;
 }
 
 #reviews 
@@ -86,7 +109,8 @@ img
 label.radio span 
 {
 	padding: 1vh 4vh;
-	background-color: rgb(54, 54, 54);
+	background-color: grey;
+	
 	color: white;
 	display: inline-block;
 	margin-right: 2vh;
@@ -96,9 +120,9 @@ label.radio input:checked+span
 {
 	border: 1px solid white;
 	padding: 1vh 4vh;
-	background-color: rgb(54, 54, 54);
+	background-color: #FA2803;
 	margin-right: 2vh;
-	color: #588CA0;
+	color: #ffffff;
 	display: inline-block;
 }
 
@@ -132,11 +156,21 @@ label.radio input:checked+span
 	padding: 0;
 }
 
+@media(max-width:768px) 
+{
+	.lower i 
+	{
+		padding: 2vh;
+		margin-right: 1vh;
+		color: grey;
+		border: 1px solid rgb(85, 85, 85);
+	}
+}
+
 .btn 
 {
-	background-color: white;
-	border-color: rgba(186, 216, 125, 0.863);
-	color: rgba(186, 216, 125, 0.863);
+	background-color: #FA2803;
+	color: rgb(54, 54, 54);
 	padding: 1.8vh 4.5vh;
 	height: fit-content;
 	border-radius: 3px;
@@ -156,6 +190,20 @@ label.radio input:checked+span
 .btn:hover 
 {
 	color: white;
+}
+
+@media(max-width:768px) 
+{
+	.btn 
+	{
+		background-color: transparent;
+		border-color: rgba(186, 216, 125, 0.863);
+		color: rgba(186, 216, 125, 0.863);
+		padding: 1vh;
+		font-size: 0.9rem;
+		height: fit-content;
+		border-radius: 3px;
+	}
 }
 
 a 
@@ -181,46 +229,4 @@ label.radio input
 label.radio 
 {
 	cursor: pointer;
-}
-
-@media(max-width:768px) 
-{
-	.lower i 
-	{
-		padding: 2vh;
-		margin-right: 1vh;
-		color: grey;
-		border: 1px solid rgb(85, 85, 85);
-	}
-}
-
-@media(max-width:768px) 
-{
-	.btn 
-	{
-		background-color: transparent;
-		border-color: rgba(186, 216, 125, 0.863);
-		color: rgba(186, 216, 125, 0.863);
-		padding: 1vh;
-		font-size: 0.9rem;
-		height: fit-content;
-		border-radius: 3px;
-	}
-}
-
-@media(max-width:768px) 
-{
-	.card 
-	{
-		width: 100%;
-		padding: 1.5rem;
-	}
-}
-
-@media(max-width:768px) 
-{
-	img 
-	{
-		padding: 2.5rem 0;
-	}
 }
